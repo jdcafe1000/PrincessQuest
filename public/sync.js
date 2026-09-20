@@ -106,9 +106,23 @@
     }
   };
 
+  // Resolve null rather than a store that cannot work, so the page falls back
+  // to local storage quietly instead of reporting saves as failing. This is
+  // the state before a KV namespace is bound, and offline.
+  var reachable = null;
+  function isReachable() {
+    if (!reachable) {
+      reachable = request(ENDPOINT, { headers: { accept: "application/json" }, cache: "no-store" })
+        .then(function () { return true; })
+        .catch(function () { return false; });
+    }
+    return reachable;
+  }
+
   window.claude = {
     use: function (name) {
-      return Promise.resolve(name === "db" ? db : null);
+      if (name !== "db") return Promise.resolve(null);
+      return isReachable().then(function (ok) { return ok ? db : null; });
     }
   };
 })();

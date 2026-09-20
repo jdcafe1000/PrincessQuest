@@ -1,0 +1,36 @@
+{
+  // Must match the Worker in the dashboard, or a deploy creates a second one
+  // and the custom domain stays on the old Worker.
+  "name": "princessquest",
+  "main": "src/index.js",
+  "compatibility_date": "2026-09-18",
+
+  // Everything in public/ is served directly. The Worker in src/index.js only
+  // runs for paths with no matching file, which is how /api/state reaches it.
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS"
+  },
+
+  "observability": { "enabled": true }
+
+  // ---------------------------------------------------------------------
+  // TURN ON CROSS-DEVICE SYNC
+  //
+  // Until this is here, the chart works but each device saves on its own.
+  //
+  //   1. Dashboard -> Storage & Databases -> KV -> Create a namespace,
+  //      named princess-quest. Copy the namespace ID it shows you.
+  //   2. Add a comma after the "observability" line above, then uncomment
+  //      the block below and paste the ID in place of PASTE_NAMESPACE_ID.
+  //   3. Commit and push. The build deploys it.
+  //
+  // Add the binding HERE, not in the dashboard's "Add a binding" dialog:
+  // this Worker deploys with `wrangler deploy`, which treats this file as the
+  // source of truth and drops any binding that is not in it.
+  //
+  // "kv_namespaces": [
+  //   { "binding": "CHART", "id": "PASTE_NAMESPACE_ID" }
+  // ]
+  // ---------------------------------------------------------------------
+}
