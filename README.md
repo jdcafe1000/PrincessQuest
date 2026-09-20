@@ -67,6 +67,27 @@ Keep that binding in `wrangler.jsonc` and **not** in the dashboard's *Add a
 binding* dialog: `wrangler deploy` treats this file as the source of truth and
 drops any binding that is not in it.
 
+## Weeks and the archive
+
+A week is identified by `weekKey`, the ISO date of its Monday. `weekOf` beside
+it is only a label: people edit it, and `toLocaleDateString` renders it
+differently per device, so it can never decide when a week ends.
+
+On load, whenever the page returns to the front, and every ten minutes, the
+chart compares `weekKey` against this Monday. When they differ it files the
+finished week into `state.history` and clears the board — nothing is erased.
+"Start a new week" does the same thing on demand. A week with no stars and an
+empty chest is dropped rather than filed, filing the same week twice replaces
+rather than duplicates it, and the archive keeps the most recent 52 weeks.
+
+The rollover waits for the first shared state to arrive, so a device holding a
+stale copy cannot file a week the other household has already moved past.
+
+History travels inside the state document, so it syncs, works offline and works
+inside the artifact with no extra endpoint. A filed week stores each quest's
+icon, text, rate and a seven character day string, which keeps a year of weeks
+to a few tens of kilobytes.
+
 ## Finishing a week
 
 When the last star of the week goes up, the chart hands over to a full-screen

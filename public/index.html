@@ -128,6 +128,24 @@ h1 .name{color:var(--copper)}
 .note{margin:12px 2px 0; color:var(--soft); font-weight:700; font-size:.92rem; min-height:1.2em}
 .add{justify-self:start}
 
+/* Past weeks */
+.history{display:grid; gap:8px; margin-top:14px}
+.past-week{background:var(--card); border:2px solid var(--line); border-radius:18px; overflow:hidden}
+.week-head{
+  width:100%; display:flex; flex-wrap:wrap; gap:4px 12px; justify-content:space-between; align-items:baseline;
+  background:none; border:0; padding:11px 14px; text-align:left; font-weight:800; color:var(--ink);
+}
+.week-when{font-family:var(--display)}
+.week-score{color:var(--soft); font-weight:700; font-size:.92rem}
+.week-body{list-style:none; margin:0; padding:2px 14px 12px; display:grid; gap:7px; border-top:2px solid var(--line)}
+.week-body li{display:flex; gap:9px; align-items:center; font-weight:700; font-size:.95rem}
+.week-icon{flex:none}
+.week-text{flex:1 1 auto; min-width:0; overflow-wrap:anywhere}
+.week-days{flex:none; display:flex; gap:4px}
+.week-days i{width:11px; height:11px; border-radius:50%; background:var(--empty); border:1.5px solid var(--lilac)}
+.week-days i.on{background:var(--gold); border-color:var(--gold-deep)}
+.week-chest{color:var(--gold-deep); font-weight:800}
+
 /* Week-complete celebration */
 .cheer{
   position:fixed; inset:0; z-index:50; display:none; place-items:center; overflow:hidden;
@@ -180,7 +198,7 @@ h1 .name{color:var(--copper)}
 @media print{
   :root{--sky:#fff;--sky2:#fff;--card:#fff;--ink:#43245C;--soft:#7A5C93;--plum:#5B2E83;--lilac:#CDB4F0;--rose:#F07FAE;--gold:#F2B431;--gold-deep:#C98A0C;--line:#EBD9F5;--empty:#fff;--on-plum:#fff}
   body{background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact}
-  .controls,.note,.sum,.remove,.add{display:none !important}
+  .controls,.note,.sum,.remove,.add,.history{display:none !important}
   .cheer{display:none !important}
   .quest{break-inside:avoid; grid-template-columns:auto minmax(0,1fr) auto auto; grid-template-areas:"icon text extra days"}
   .day{flex:none; width:40px}
@@ -235,7 +253,9 @@ h1 .name{color:var(--copper)}
   <div class="controls">
     <button class="btn primary" id="edit" type="button">Edit quests</button>
     <button class="btn warn" id="newWeek" type="button">Start a new week</button>
+    <button class="btn" id="past" type="button" hidden>Past weeks</button>
   </div>
+  <section class="history" id="history" hidden aria-label="Past weeks"></section>
   <p class="note" id="note" role="status"></p>
 </main>
 
@@ -250,14 +270,24 @@ h1 .name{color:var(--copper)}
   var STAR='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.8l2.9 6.4 7 .8-5.2 4.7 1.4 6.9L12 17.1l-6.1 3.5 1.4-6.9L2.1 9l7-.8z" fill="#F2B431" stroke="#C98A0C" stroke-width="1.2" stroke-linejoin="round"/></svg>';
   var KEY="princess-quest-chart-v1";
 
+  function mondayDate(){
+    var d=new Date(); d.setHours(0,0,0,0);
+    d.setDate(d.getDate()-((d.getDay()+6)%7));
+    return d;
+  }
+  // weekOf is a label people edit and read differently by locale, so the
+  // rollover turns on this key instead. Two devices must always agree.
+  function mondayKey(){
+    var d=mondayDate(), p=function(n){return (n<10?"0":"")+n};
+    return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate());
+  }
   function monday(){
-    var d=new Date(), back=(d.getDay()+6)%7; d.setDate(d.getDate()-back);
-    return d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
+    return mondayDate().toLocaleDateString(undefined,{month:"short",day:"numeric"});
   }
   function blank(){return [false,false,false,false,false,false,false]}
   function q(icon,text){return {id:Math.random().toString(36).slice(2,9),icon:icon,text:text,value:"",days:blank()}}
   function defaults(){
-    return {name:"",weekOf:monday(),chest:"",quests:[
+    return {name:"",weekOf:monday(),weekKey:mondayKey(),chest:"",history:[],quests:[
       q("🛏️","Make my royal bed"),
       q("🦷","Brush teeth, morning and night"),
       q("🧸","Tidy up my toys"),
@@ -269,12 +299,18 @@ h1 .name{color:var(--copper)}
   }
 
   var state=defaults(), editing=false, armed=false, db=null, saving=false, dirty=false;
-  var wasDone=null, cheering=false;
+  var wasDone=null, cheering=false, rollReady=false, historyOpen=false, openWeek=null;
+  var MAX_HISTORY=52;
   var CHEER_KEY="princess-quest-cheered-v1";
   var $=function(id){return document.getElementById(id)};
 
   function valid(s){return s&&Array.isArray(s.quests)}
-  try{var cached=JSON.parse(localStorage.getItem(KEY)||"null"); if(valid(cached)) state=cached;}catch(e){}
+  function normalize(s){
+    if(!Array.isArray(s.history)) s.history=[];
+    if(typeof s.weekKey!=="string") s.weekKey="";
+    return s;
+  }
+  try{var cached=JSON.parse(localStorage.getItem(KEY)||"null"); if(valid(cached)) state=normalize(cached);}catch(e){}
 
   function el(tag,attrs,kids){
     var n=document.createElement(tag);
@@ -304,6 +340,57 @@ h1 .name{color:var(--copper)}
     })();
   }
 
+  // ---- archiving a finished week ----------------------------------------
+  function snapshotWeek(){
+    return {
+      key:state.weekKey||mondayKey(), week:state.weekOf, chest:state.chest||"",
+      quests:state.quests.map(function(q){
+        return {icon:q.icon, text:q.text, value:q.value||"",
+                days:q.days.map(function(b){return b?"1":"0"}).join("")};
+      })
+    };
+  }
+
+  function weekStats(w){
+    var got=0,total=0,sum=0;
+    w.quests.forEach(function(q){
+      var c=(q.days.match(/1/g)||[]).length, v=parseFloat(q.value);
+      got+=c; total+=7; if(v>0) sum+=c*v;
+    });
+    return {got:got,total:total,sum:sum};
+  }
+
+  // File the current week away and start the one beginning on `key`.
+  // An untouched week is not worth keeping, so it is dropped rather than filed.
+  function rollTo(key,label){
+    var week=snapshotWeek(), st=weekStats(week);
+    if(st.got>0||(state.chest||"").trim()){
+      state.history=(state.history||[]).filter(function(w){return w.key!==week.key});
+      state.history.unshift(week);
+      if(state.history.length>MAX_HISTORY) state.history.length=MAX_HISTORY;
+    }
+    state.quests.forEach(function(q){q.days=blank()});
+    state.chest=""; state.weekKey=key; state.weekOf=label;
+    openWeek=null; wasDone=null;
+    try{localStorage.removeItem(CHEER_KEY)}catch(e){}
+  }
+
+  // Runs on load, whenever the page comes back to the front, and on a timer,
+  // since a tablet can sit on this page for days. Held until the first shared
+  // state arrives so a stale copy never files a week the other household owns.
+  function checkRollover(){
+    if(!rollReady) return;
+    var key=mondayKey();
+    if(!state.weekKey){state.weekKey=key; save(); return}
+    if(state.weekKey===key) return;
+    closeCheer();
+    rollTo(key,monday());
+    render(); save();
+    $("note").textContent="A new week has begun. Last week is filed under Past weeks.";
+  }
+
+  function readyToRoll(){ if(rollReady) return; rollReady=true; checkRollover(); }
+
   function closeCheer(){
     if(!cheering) return;
     cheering=false;
@@ -316,8 +403,8 @@ h1 .name{color:var(--copper)}
   function maybeCheer(t){
     var seen=null;
     try{seen=localStorage.getItem(CHEER_KEY)}catch(e){}
-    if(seen===state.weekOf) return;
-    try{localStorage.setItem(CHEER_KEY,state.weekOf)}catch(e){}
+    if(seen===state.weekKey) return;
+    try{localStorage.setItem(CHEER_KEY,state.weekKey)}catch(e){}
     cheer(t);
   }
 
@@ -445,8 +532,46 @@ h1 .name{color:var(--copper)}
         var ins=list.querySelectorAll(".text input"); if(ins.length) ins[ins.length-1].focus()}})]));
   }
 
+  function renderHistory(){
+    var list=state.history||[], panel=$("history"), btn=$("past");
+    btn.hidden=!list.length;
+    btn.textContent=historyOpen?"Hide past weeks":"Past weeks ("+list.length+")";
+    btn.setAttribute("aria-expanded",String(historyOpen&&!!list.length));
+    panel.hidden=!historyOpen||!list.length;
+    panel.textContent="";
+    if(panel.hidden) return;
+
+    list.forEach(function(w){
+      var st=weekStats(w), isOpen=openWeek===w.key;
+      var head=el("button",{class:"week-head",type:"button","aria-expanded":String(isOpen),
+        onclick:function(){openWeek=isOpen?null:w.key; renderHistory()}});
+      head.appendChild(el("span",{class:"week-when",text:"Week of "+w.week}));
+      head.appendChild(el("span",{class:"week-score",
+        text:st.got+" of "+st.total+" stars"+(st.sum>0?" · "+money(st.sum):"")}));
+      var item=el("div",{class:"past-week"},[head]);
+
+      if(isOpen){
+        var body=el("ul",{class:"week-body"});
+        w.quests.forEach(function(q){
+          var earned=(q.days.match(/1/g)||[]).length;
+          var li=el("li",{},[
+            el("span",{class:"week-icon",text:q.icon,"aria-hidden":"true"}),
+            el("span",{class:"week-text",text:q.text||"Quest"})
+          ]);
+          var dots=el("span",{class:"week-days",role:"img","aria-label":earned+" of 7 days"});
+          for(var i=0;i<7;i++) dots.appendChild(el("i",{class:q.days.charAt(i)==="1"?"on":null}));
+          li.appendChild(dots);
+          body.appendChild(li);
+        });
+        if((w.chest||"").trim()) body.appendChild(el("li",{class:"week-chest",text:"Treasure chest: $"+w.chest}));
+        item.appendChild(body);
+      }
+      panel.appendChild(item);
+    });
+  }
+
   function render(){
-    renderHeader(); renderQuests(); renderProgress();
+    renderHeader(); renderQuests(); renderProgress(); renderHistory();
     $("chest").value=state.chest||"";
     $("edit").textContent=editing?"Done editing":"Edit quests";
   }
@@ -457,36 +582,43 @@ h1 .name{color:var(--copper)}
     $("note").textContent=editing?"Rename quests, tap a picture to change it, and set dollars per star if you like.":"";
   });
   $("newWeek").addEventListener("click",function(e){
-    if(!armed){armed=true; e.currentTarget.textContent="Tap again to clear all stars";
+    if(!armed){armed=true; e.currentTarget.textContent="Tap again to file this week away";
       setTimeout(function(){armed=false; $("newWeek").textContent="Start a new week"},4000); return}
     armed=false; e.currentTarget.textContent="Start a new week";
     closeCheer();
-    try{localStorage.removeItem(CHEER_KEY)}catch(e){}
-    state.quests.forEach(function(x){x.days=blank()}); state.chest=""; state.weekOf=monday();
-    render(); save(); $("note").textContent="Fresh week, fresh stars.";
+    rollTo(mondayKey(),monday());
+    render(); save();
+    $("note").textContent="Fresh week, fresh stars. Last week is filed under Past weeks.";
   });
+
+  $("past").addEventListener("click",function(){historyOpen=!historyOpen; renderHistory()});
+
+  document.addEventListener("visibilitychange",function(){ if(!document.hidden) checkRollover() });
+  window.addEventListener("focus",checkRollover);
+  setInterval(checkRollover,10*60*1000);
 
   render();
 
   (async function(){
-    if(!(window.claude&&window.claude.use)) return;
+    setTimeout(readyToRoll,3000);
+    if(!(window.claude&&window.claude.use)){readyToRoll(); return}
     try{
-      db=await window.claude.use("db"); if(!db) return;
+      db=await window.claude.use("db"); if(!db){readyToRoll(); return}
       var ref=db.doc("chart/state"), firstSnap=true;
       ref.onSnapshot(function(snap){
         if(!snap.exists||snap.metadata.hasPendingWrites||saving) return;
         var a=document.activeElement; if(a&&a.tagName==="INPUT") return;
         var d=snap.data(); if(!d||typeof d.json!=="string") return;
-        if(d.json===JSON.stringify(state)){firstSnap=false; return}
+        if(d.json===JSON.stringify(state)){firstSnap=false; readyToRoll(); return}
         try{var s=JSON.parse(d.json); if(valid(s)){
-          state=s; try{localStorage.setItem(KEY,d.json)}catch(e){}
+          state=normalize(s); try{localStorage.setItem(KEY,d.json)}catch(e){}
           // Catching up with a week someone else already finished is not a
           // moment to celebrate, so take the first shared state as the baseline.
-          if(firstSnap){wasDone=null; firstSnap=false}
+          if(firstSnap){wasDone=null; firstSnap=false; render(); readyToRoll(); return}
           render();
         }}catch(e){}
       },function(){});
-    }catch(e){db=null}
+    }catch(e){db=null; readyToRoll()}
   })();
 })();
 </script>
