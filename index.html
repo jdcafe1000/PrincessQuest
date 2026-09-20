@@ -1,0 +1,383 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2299.77">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!doctype html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="utf-8"&gt;</p>
+<p class="p1">&lt;meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"&gt;</p>
+<p class="p1">&lt;title&gt;Princess Quest Chart&lt;/title&gt;</p>
+<p class="p1">&lt;link href="https://fonts.googleapis.com/css2?family=Grandstander:wght@500;700;800&amp;family=Nunito:wght@500;700;800&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1">:root{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>box-sizing:border-box;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding-top:env(safe-area-inset-top,0px);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>padding-bottom:env(safe-area-inset-bottom,0px);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--sky:#FBEAF4; --sky2:#E9DDFB; --card:#FFFFFF; --ink:#43245C; --soft:#7A5C93;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--plum:#5B2E83; --lilac:#CDB4F0; --rose:#F07FAE; --gold:#F2B431; --gold-deep:#C98A0C;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--copper:#D2582A; --line:#EBD9F5; --empty:#F6EEFB; --on-plum:#FFFFFF;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--display:"Grandstander","Comic Sans MS","Trebuchet MS",sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--body:"Nunito","Trebuchet MS","Segoe UI",sans-serif;</p>
+<p class="p1">}</p>
+<p class="p1">@media (prefers-color-scheme:dark){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>:root:not([data-theme="light"]){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--sky:#1F1230; --sky2:#2A1744; --card:#2F1D49; --ink:#FBEFFF; --soft:#C9B2E0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--plum:#B98BE8; --lilac:#6B4A99; --rose:#F58DB8; --gold:#F6C453; --gold-deep:#F6C453;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>--line:#46306A; --empty:#3A2659; --on-plum:#1F1230;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1">}</p>
+<p class="p1">:root[data-theme="dark"]{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--sky:#1F1230; --sky2:#2A1744; --card:#2F1D49; --ink:#FBEFFF; --soft:#C9B2E0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--plum:#B98BE8; --lilac:#6B4A99; --rose:#F58DB8; --gold:#F6C453; --gold-deep:#F6C453;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--line:#46306A; --empty:#3A2659; --on-plum:#1F1230;</p>
+<p class="p1">}</p>
+<p class="p1">*,*::before,*::after{box-sizing:inherit}</p>
+<p class="p1">html{scroll-padding-top:env(safe-area-inset-top,0px)}</p>
+<p class="p1">body{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>margin:0; font-family:var(--body); color:var(--ink); font-weight:500;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background:var(--sky);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background-image:</p>
+<p class="p1"><span class="Apple-converted-space">    </span>radial-gradient(circle at 12% 8%, var(--sky2) 0 140px, transparent 141px),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>radial-gradient(circle at 92% 30%, var(--sky2) 0 200px, transparent 201px);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background-attachment:fixed;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>min-height:100%;</p>
+<p class="p1">}</p>
+<p class="p1">main{max-width:980px; margin:0 auto; padding:16px 14px 40px}</p>
+<p class="p1">button,input{font:inherit; color:inherit}</p>
+<p class="p1">button{cursor:pointer}</p>
+<p class="p1">:focus-visible{outline:3px solid var(--rose); outline-offset:2px}</p>
+<p class="p2"><br></p>
+<p class="p1">/* Header */</p>
+<p class="p1">.hero{display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:center}</p>
+<p class="p1">.portrait{width:120px; height:132px; flex:none}</p>
+<p class="p1">h1{font-family:var(--display); font-weight:800; font-size:clamp(1.7rem,6vw,2.9rem); line-height:1.02; margin:0; color:var(--plum); letter-spacing:-.01em}</p>
+<p class="p1">h1 .name{color:var(--copper)}</p>
+<p class="p1">.week{margin:.35rem 0 0; font-weight:700; color:var(--soft); font-size:1.02rem}</p>
+<p class="p1">.hero input{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-family:var(--display); font-weight:800; color:var(--copper);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border:0; border-bottom:3px dashed var(--lilac); background:transparent; width:7.5ch; min-width:0; padding:0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-size:inherit;</p>
+<p class="p1">}</p>
+<p class="p1">.week input{font-family:var(--body); font-weight:700; color:var(--ink); font-size:inherit; width:9ch; border-bottom-width:2px}</p>
+<p class="p2"><br></p>
+<p class="p1">/* Path to the castle */</p>
+<p class="p1">.path{margin:18px 0 6px; background:var(--card); border:2px solid var(--line); border-radius:22px; padding:12px 14px 14px}</p>
+<p class="p1">.path-top{display:flex; justify-content:space-between; align-items:baseline; gap:10px; font-weight:800}</p>
+<p class="p1">.path-top span:last-child{color:var(--soft); font-weight:700; font-size:.92rem}</p>
+<p class="p1">.track{position:relative; height:18px; border-radius:99px; background:var(--empty); margin:14px 30px 2px 6px}</p>
+<p class="p1">.fill{position:absolute; inset:0 auto 0 0; width:0; border-radius:99px; background:linear-gradient(90deg,var(--rose),var(--gold)); transition:width .5s cubic-bezier(.3,1.4,.5,1)}</p>
+<p class="p1">.walker,.castle{position:absolute; top:50%; transform:translate(-50%,-58%); font-size:1.7rem; line-height:1}</p>
+<p class="p1">.walker{left:0; transition:left .5s cubic-bezier(.3,1.4,.5,1)}</p>
+<p class="p1">.castle{left:calc(100% + 16px); font-size:2rem}</p>
+<p class="p2"><br></p>
+<p class="p1">/* Quests */</p>
+<p class="p1">.quests{list-style:none; margin:14px 0 0; padding:0; display:grid; gap:10px}</p>
+<p class="p1">.quest{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>background:var(--card); border:2px solid var(--line); border-radius:22px; padding:10px 12px;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display:grid; grid-template-columns:auto 1fr auto; grid-template-areas:"icon text extra" "days days days"; gap:8px 10px; align-items:center;</p>
+<p class="p1">}</p>
+<p class="p1">.quest.done{border-color:var(--gold); box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 30%,transparent)}</p>
+<p class="p1">.icon{grid-area:icon; width:42px; height:42px; border-radius:14px; border:0; background:var(--empty); font-size:1.4rem; line-height:1; padding:0}</p>
+<p class="p1">.icon:disabled{cursor:default; opacity:1}</p>
+<p class="p1">.text{grid-area:text; font-weight:800; font-size:1.05rem; line-height:1.2; min-width:0; overflow-wrap:anywhere}</p>
+<p class="p1">.text input{width:100%; border:2px solid var(--line); border-radius:12px; padding:7px 10px; background:var(--card); font-weight:800}</p>
+<p class="p1">.extra{grid-area:extra; display:flex; gap:6px; align-items:center}</p>
+<p class="p1">.worth{font-weight:800; color:var(--gold-deep); font-size:.92rem; white-space:nowrap}</p>
+<p class="p1">.money{display:inline-flex; align-items:center; border:2px solid var(--line); border-radius:12px; padding:0 8px; background:var(--card); font-weight:800}</p>
+<p class="p1">.money input{border:0; background:transparent; width:4.2ch; padding:7px 0 7px 2px; font-weight:800; min-width:0}</p>
+<p class="p1">.money input:focus{outline:none}</p>
+<p class="p1">.money:focus-within{border-color:var(--rose)}</p>
+<p class="p1">.remove{width:36px; height:36px; border-radius:50%; border:2px solid var(--line); background:var(--card); font-weight:800; color:var(--soft)}</p>
+<p class="p1">.days{grid-area:days; display:flex; gap:6px; justify-content:space-between}</p>
+<p class="p1">.day{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>flex:1 1 0; max-width:54px; aspect-ratio:1; min-width:0; border-radius:50%;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>border:2px dashed var(--lilac); background:var(--empty); color:var(--soft);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>font-family:var(--display); font-weight:700; font-size:.82rem; padding:0; position:relative;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display:grid; place-items:center;</p>
+<p class="p1">}</p>
+<p class="p1">.day svg{position:absolute; inset:12%; width:76%; height:76%; opacity:0; transform:scale(.2) rotate(-40deg)}</p>
+<p class="p1">.day[aria-pressed="true"]{border:2px solid var(--rose); background:color-mix(in srgb,var(--rose) 22%,var(--card)); color:transparent}</p>
+<p class="p1">.day[aria-pressed="true"] svg{opacity:1; transform:none}</p>
+<p class="p1">.day.pop svg{animation:pop .45s cubic-bezier(.3,1.6,.5,1)}</p>
+<p class="p1">@keyframes pop{0%{transform:scale(.2) rotate(-40deg)}60%{transform:scale(1.25) rotate(8deg)}100%{transform:none}}</p>
+<p class="p1">.ribbon{display:none; grid-column:1/-1; text-align:center; font-family:var(--display); font-weight:700; color:var(--gold-deep); font-size:.95rem}</p>
+<p class="p1">.quest.done .ribbon{display:block}</p>
+<p class="p2"><br></p>
+<p class="p1">/* Treasure */</p>
+<p class="p1">.treasure{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>margin-top:16px; border-radius:26px; padding:16px; background:var(--plum); color:var(--on-plum);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>display:grid; gap:10px; grid-template-columns:1fr auto; align-items:center;</p>
+<p class="p1">}</p>
+<p class="p1">.treasure h2{font-family:var(--display); font-weight:800; font-size:1.35rem; margin:0; line-height:1.1}</p>
+<p class="p1">.treasure p{margin:.2rem 0 0; font-weight:700; opacity:.9; font-size:.95rem}</p>
+<p class="p1">.chest{display:flex; align-items:center; background:var(--card); color:var(--ink); border:4px solid var(--gold); border-radius:20px; padding:4px 14px; font-family:var(--display); font-weight:800; font-size:2rem}</p>
+<p class="p1">.chest input{border:0; background:transparent; width:4.6ch; font-family:var(--display); font-weight:800; font-size:inherit; padding:4px 0 4px 4px; min-width:0}</p>
+<p class="p1">.chest input:focus{outline:none}</p>
+<p class="p1">.sum{grid-column:1/-1; display:flex; flex-wrap:wrap; gap:8px 12px; align-items:center; font-weight:700}</p>
+<p class="p1">.sum[hidden]{display:none}</p>
+<p class="p2"><br></p>
+<p class="p1">/* Controls */</p>
+<p class="p1">.controls{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}</p>
+<p class="p1">.btn{border:2px solid var(--plum); background:var(--card); color:var(--plum); border-radius:99px; padding:10px 16px; font-weight:800}</p>
+<p class="p1">.btn.primary{background:var(--plum); color:var(--on-plum)}</p>
+<p class="p1">.btn.warn{border-color:var(--copper); color:var(--copper)}</p>
+<p class="p1">.btn.small{padding:6px 12px; border-color:var(--gold); color:var(--ink); background:var(--gold)}</p>
+<p class="p1">.note{margin:12px 2px 0; color:var(--soft); font-weight:700; font-size:.92rem; min-height:1.2em}</p>
+<p class="p1">.add{justify-self:start}</p>
+<p class="p2"><br></p>
+<p class="p1">@media (min-width:760px){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>main{padding:28px 24px 56px}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.portrait{width:170px; height:187px}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.quest{grid-template-columns:auto minmax(0,1fr) auto auto; grid-template-areas:"icon text extra days"; padding:10px 16px}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.days{gap:8px}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.day{flex:none; width:46px; font-size:.85rem}</p>
+<p class="p1">}</p>
+<p class="p1">@media (prefers-reduced-motion:reduce){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.day.pop svg{animation:none} .fill,.walker{transition:none}</p>
+<p class="p1">}</p>
+<p class="p1">@media print{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>:root{--sky:#fff;--sky2:#fff;--card:#fff;--ink:#43245C;--soft:#7A5C93;--plum:#5B2E83;--lilac:#CDB4F0;--rose:#F07FAE;--gold:#F2B431;--gold-deep:#C98A0C;--line:#EBD9F5;--empty:#fff;--on-plum:#fff}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>body{background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.controls,.note,.sum,.remove,.add{display:none !important}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.quest{break-inside:avoid; grid-template-columns:auto minmax(0,1fr) auto auto; grid-template-areas:"icon text extra days"}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.day{flex:none; width:40px}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>.quests{gap:6px}</p>
+<p class="p1">}</p>
+<p class="p1">&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1">&lt;main&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;header class="hero"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;svg class="portrait" viewBox="0 0 200 220" role="img" aria-label="A smiling princess with long red hair, freckles and a gold crown"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;path d="M100 30C50 30 33 76 40 122c4 28-16 44-4 74 16 16 36 6 38-14h52c2 20 22 30 38 14 12-30-8-46-4-74 7-46-10-92-60-92Z" fill="#D2582A"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;path d="M44 150c-6 18-10 30-4 44M158 150c6 18 10 30 4 44M60 170c-2 10-4 18-10 24M140 170c2 10 4 18 10 24" stroke="#F08A4B" stroke-width="4" stroke-linecap="round" fill="none"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;path d="M52 220c3-36 25-50 48-50s45 14 48 50Z" fill="#B99AE8"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;path d="M78 176c6 12 38 12 44 0" stroke="#F2B431" stroke-width="6" stroke-linecap="round" fill="none"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;rect x="89" y="148" width="22" height="30" rx="10" fill="#FFD3B5"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;ellipse cx="100" cy="112" rx="43" ry="46" fill="#FFDCC2"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;path d="M57 108C54 66 82 50 102 50c22 0 46 16 41 58-8-22-22-34-40-38-10 16-28 22-46 38Z" fill="#D2582A"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;path d="M70 88c10-8 20-14 32-18" stroke="#F08A4B" stroke-width="4" stroke-linecap="round" fill="none"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;circle cx="84" cy="114" r="5.5" fill="#2E7D5B"/&gt;&lt;circle cx="116" cy="114" r="5.5" fill="#2E7D5B"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;circle cx="86" cy="112" r="1.8" fill="#fff"/&gt;&lt;circle cx="118" cy="112" r="1.8" fill="#fff"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;path d="M76 106c4-5 12-5 16-1M108 105c4-4 12-4 16 1" stroke="#9C3D1B" stroke-width="2.5" stroke-linecap="round" fill="none"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;circle cx="73" cy="130" r="8" fill="#F8A5B8" opacity=".55"/&gt;&lt;circle cx="127" cy="130" r="8" fill="#F8A5B8" opacity=".55"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;g fill="#D98B5F"&gt;&lt;circle cx="90" cy="126" r="1.4"/&gt;&lt;circle cx="96" cy="123" r="1.4"/&gt;&lt;circle cx="104" cy="123" r="1.4"/&gt;&lt;circle cx="110" cy="126" r="1.4"/&gt;&lt;circle cx="100" cy="127" r="1.4"/&gt;&lt;/g&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;path d="M88 136q12 12 24 0" stroke="#C0445A" stroke-width="3.5" stroke-linecap="round" fill="none"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;path d="M70 54l7-32 13 20 10-28 10 28 13-20 7 32Z" fill="#F2B431" stroke="#C98A0C" stroke-width="2.5" stroke-linejoin="round"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;circle cx="100" cy="40" r="5" fill="#F07FAE"/&gt;&lt;circle cx="82" cy="45" r="3.5" fill="#7ED0C0"/&gt;&lt;circle cx="118" cy="45" r="3.5" fill="#7ED0C0"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;circle cx="77" cy="21" r="3.5" fill="#fff" stroke="#C98A0C" stroke-width="2"/&gt;&lt;circle cx="100" cy="13" r="3.5" fill="#fff" stroke="#C98A0C" stroke-width="2"/&gt;&lt;circle cx="123" cy="21" r="3.5" fill="#fff" stroke="#C98A0C" stroke-width="2"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/svg&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h1 id="title"&gt;&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p class="week" id="week"&gt;&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/header&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;section class="path" aria-live="polite"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="path-top"&gt;&lt;span&gt;The road to the castle&lt;/span&gt;&lt;span id="count"&gt;&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="track"&gt;&lt;div class="fill" id="fill"&gt;&lt;/div&gt;&lt;span class="walker" id="walker" aria-hidden="true"&gt;👑&lt;/span&gt;&lt;span class="castle" aria-hidden="true"&gt;🏰&lt;/span&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;ul class="quests" id="quests"&gt;&lt;/ul&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;section class="treasure"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;h2&gt;Treasure chest&lt;/h2&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;p&gt;What the princess earned this week&lt;/p&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;label class="chest"&gt;&lt;span aria-hidden="true"&gt;$&lt;/span&gt;&lt;input id="chest" inputmode="decimal" aria-label="Dollars earned this week" placeholder="0"&gt;&lt;/label&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="sum" id="sum" hidden&gt;&lt;span id="sumText"&gt;&lt;/span&gt;&lt;button class="btn small" id="useSum" type="button"&gt;Put it in the chest&lt;/button&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/section&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="controls"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn primary" id="edit" type="button"&gt;Edit quests&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn warn" id="newWeek" type="button"&gt;Start a new week&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;p class="note" id="note" role="status"&gt;&lt;/p&gt;</p>
+<p class="p1">&lt;/main&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1">(function(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var ICONS=["🛏️","🦷","🧸","🍽️","📚","💖","🦄","🐶","🧹","👗","🎒","🌟","🎨","🥦","🎵","🌷"];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var STAR='&lt;svg viewBox="0 0 24 24" aria-hidden="true"&gt;&lt;path d="M12 1.8l2.9 6.4 7 .8-5.2 4.7 1.4 6.9L12 17.1l-6.1 3.5 1.4-6.9L2.1 9l7-.8z" fill="#F2B431" stroke="#C98A0C" stroke-width="1.2" stroke-linejoin="round"/&gt;&lt;/svg&gt;';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var KEY="princess-quest-chart-v1";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function monday(){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>var d=new Date(), back=(d.getDay()+6)%7; d.setDate(d.getDate()-back);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return d.toLocaleDateString(undefined,{month:"short",day:"numeric"});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>function blank(){return [false,false,false,false,false,false,false]}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>function q(icon,text){return {id:Math.random().toString(36).slice(2,9),icon:icon,text:text,value:"",days:blank()}}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>function defaults(){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return {name:"",weekOf:monday(),chest:"",quests:[</p>
+<p class="p1"><span class="Apple-converted-space">      </span>q("🛏️","Make my royal bed"),</p>
+<p class="p1"><span class="Apple-converted-space">      </span>q("🦷","Brush teeth, morning and night"),</p>
+<p class="p1"><span class="Apple-converted-space">      </span>q("🧸","Tidy up my toys"),</p>
+<p class="p1"><span class="Apple-converted-space">      </span>q("🍽️","Help set the table"),</p>
+<p class="p1"><span class="Apple-converted-space">      </span>q("📚","Read for 15 minutes"),</p>
+<p class="p1"><span class="Apple-converted-space">      </span>q("💖","Use kind words and listen the first time"),</p>
+<p class="p1"><span class="Apple-converted-space">      </span>q("🦄","Brave challenge: try something new")</p>
+<p class="p1"><span class="Apple-converted-space">    </span>]};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>var state=defaults(), editing=false, armed=false, db=null, saving=false, dirty=false;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>var $=function(id){return document.getElementById(id)};</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function valid(s){return s&amp;&amp;Array.isArray(s.quests)}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>try{var cached=JSON.parse(localStorage.getItem(KEY)||"null"); if(valid(cached)) state=cached;}catch(e){}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function el(tag,attrs,kids){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>var n=document.createElement(tag);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>for(var k in attrs||{}){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(k==="text") n.textContent=attrs[k];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>else if(k==="html") n.innerHTML=attrs[k];</p>
+<p class="p1"><span class="Apple-converted-space">      </span>else if(k.slice(0,2)==="on") n.addEventListener(k.slice(2),attrs[k]);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>else if(attrs[k]!==false&amp;&amp;attrs[k]!=null) n.setAttribute(k,attrs[k]);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>(kids||[]).forEach(function(c){n.appendChild(c)});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return n;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>function money(n){return "$"+(Math.round(n*100)/100).toFixed(2).replace(/\.00$/,"")}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function save(){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(!db) return;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(saving){dirty=true;return}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>saving=true;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>(async function(){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>do{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>dirty=false;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>try{await db.doc("chart/state").set({json:JSON.stringify(state)})}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>catch(e){$("note").textContent="Changes on this screen could not be saved to the shared chart."; break}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}while(dirty);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>saving=false;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>})();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function renderHeader(){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>var h=$("title"), w=$("week"); h.textContent=""; w.textContent="";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(editing){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>h.appendChild(document.createTextNode("Princess "));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>h.appendChild(el("input",{value:state.name,placeholder:"name","aria-label":"Princess name",maxlength:"18",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>oninput:function(e){state.name=e.target.value; save()}}));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>h.appendChild(document.createTextNode("’s quests"));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>w.appendChild(document.createTextNode("Week of "));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>w.appendChild(el("input",{value:state.weekOf,"aria-label":"Week of",maxlength:"14",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>oninput:function(e){state.weekOf=e.target.value; save()}}));</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}else{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>h.appendChild(document.createTextNode("Princess "));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>h.appendChild(el("span",{class:"name",text:(state.name||"").trim()?state.name.trim()+"’s":"of the week’s"}));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>h.appendChild(document.createTextNode(" quests"));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>w.textContent="Week of "+state.weekOf;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function renderProgress(){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>var total=state.quests.length*7, got=0, sum=0, priced=false;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>state.quests.forEach(function(x){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>var c=x.days.filter(Boolean).length, v=parseFloat(x.value);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>got+=c; if(v&gt;0){priced=true; sum+=c*v}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>var pct=total?got/total*100:0;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>$("fill").style.width=pct+"%"; $("walker").style.left=pct+"%";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>$("count").textContent=total&amp;&amp;got===total?"You made it to the castle!":got+" of "+total+" stars";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>$("sum").hidden=!priced;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>$("sumText").textContent="Stars so far add up to "+money(sum);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>$("useSum").onclick=function(){state.chest=money(sum).slice(1); $("chest").value=state.chest; save()};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function renderQuests(){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>var list=$("quests"); list.textContent="";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>state.quests.forEach(function(x,qi){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>var li=el("li",{class:"quest"+(x.days.every(Boolean)?" done":"")});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>li.appendChild(el("button",{class:"icon",type:"button",text:x.icon,disabled:editing?null:"",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>"aria-label":editing?"Change picture":null,"aria-hidden":editing?null:"true",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>onclick:function(e){x.icon=ICONS[(ICONS.indexOf(x.icon)+1)%ICONS.length]; e.currentTarget.textContent=x.icon; save()}}));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>var text=el("div",{class:"text"});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(editing) text.appendChild(el("input",{value:x.text,"aria-label":"Quest "+(qi+1),maxlength:"60",placeholder:"Name this quest",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>oninput:function(e){x.text=e.target.value; save()}}));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>else text.textContent=x.text||"New quest";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>li.appendChild(text);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>var extra=el("div",{class:"extra"});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(editing){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>extra.appendChild(el("label",{class:"money",title:"Dollars per star"},[el("span",{text:"$","aria-hidden":"true"}),</p>
+<p class="p1"><span class="Apple-converted-space">          </span>el("input",{value:x.value,inputmode:"decimal",placeholder:"0","aria-label":"Dollars per star for "+x.text,</p>
+<p class="p1"><span class="Apple-converted-space">            </span>oninput:function(e){x.value=e.target.value.replace(/[^0-9.]/g,""); renderProgress(); save()}})]));</p>
+<p class="p1"><span class="Apple-converted-space">        </span>extra.appendChild(el("button",{class:"remove",type:"button",text:"✕","aria-label":"Remove "+x.text,</p>
+<p class="p1"><span class="Apple-converted-space">          </span>onclick:function(){state.quests.splice(qi,1); renderQuests(); renderProgress(); save()}}));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}else if(parseFloat(x.value)&gt;0){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>extra.appendChild(el("span",{class:"worth",text:money(parseFloat(x.value))+" a star"}));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>li.appendChild(extra);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>var days=el("div",{class:"days",role:"group","aria-label":x.text});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>DAYS.forEach(function(d,di){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>days.appendChild(el("button",{class:"day",type:"button","aria-pressed":String(!!x.days[di]),"aria-label":d,html:d+STAR,</p>
+<p class="p1"><span class="Apple-converted-space">          </span>onclick:function(e){</p>
+<p class="p1"><span class="Apple-converted-space">            </span>x.days[di]=!x.days[di];</p>
+<p class="p1"><span class="Apple-converted-space">            </span>var b=e.currentTarget; b.setAttribute("aria-pressed",String(x.days[di]));</p>
+<p class="p1"><span class="Apple-converted-space">            </span>b.classList.remove("pop"); if(x.days[di]){void b.offsetWidth; b.classList.add("pop")}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>li.classList.toggle("done",x.days.every(Boolean));</p>
+<p class="p1"><span class="Apple-converted-space">            </span>renderProgress(); save();</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}}));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>li.appendChild(days);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>li.appendChild(el("div",{class:"ribbon",text:"A perfect week for this quest!"}));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>list.appendChild(li);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(editing) list.appendChild(el("li",{style:"display:grid"},[el("button",{class:"btn add",type:"button",text:"Add a quest",</p>
+<p class="p1"><span class="Apple-converted-space">      </span>onclick:function(){state.quests.push(q("🌟","")); renderQuests(); renderProgress(); save();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>var ins=list.querySelectorAll(".text input"); if(ins.length) ins[ins.length-1].focus()}})]));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>function render(){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>renderHeader(); renderQuests(); renderProgress();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>$("chest").value=state.chest||"";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>$("edit").textContent=editing?"Done editing":"Edit quests";</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>$("chest").addEventListener("input",function(e){state.chest=e.target.value.replace(/[^0-9.]/g,""); e.target.value=state.chest; save()});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>$("edit").addEventListener("click",function(){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>editing=!editing; render();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>$("note").textContent=editing?"Rename quests, tap a picture to change it, and set dollars per star if you like.":"";</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>$("newWeek").addEventListener("click",function(e){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(!armed){armed=true; e.currentTarget.textContent="Tap again to clear all stars";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>setTimeout(function(){armed=false; $("newWeek").textContent="Start a new week"},4000); return}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>armed=false; e.currentTarget.textContent="Start a new week";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>state.quests.forEach(function(x){x.days=blank()}); state.chest=""; state.weekOf=monday();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>render(); save(); $("note").textContent="Fresh week, fresh stars.";</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>render();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>(async function(){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(!(window.claude&amp;&amp;window.claude.use)) return;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>try{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>db=await window.claude.use("db"); if(!db) return;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>var ref=db.doc("chart/state");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ref.onSnapshot(function(snap){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(!snap.exists||snap.metadata.hasPendingWrites||saving) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>var a=document.activeElement; if(a&amp;&amp;a.tagName==="INPUT") return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>var d=snap.data(); if(!d||typeof d.json!=="string"||d.json===JSON.stringify(state)) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>try{var s=JSON.parse(d.json); if(valid(s)){state=s; try{localStorage.setItem(KEY,d.json)}catch(e){} render()}}catch(e){}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>},function(){});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}catch(e){db=null}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>})();</p>
+<p class="p1">})();</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
