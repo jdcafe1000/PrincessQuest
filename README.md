@@ -15,6 +15,10 @@ Cloudflare Worker with static assets.
 Open `public/index.html` in any browser — no build step, no dependencies. It
 saves to that browser's local storage.
 
+On a phone or tablet, use the browser's *Add to Home Screen* to get the crown
+icon and launch it like an app. The PNGs are rendered from `public/icon.svg`;
+re-render them at 180, 192 and 512 if that art ever changes.
+
 ## Layout
 
 | Path                | What it is                                          |
@@ -22,6 +26,8 @@ saves to that browser's local storage.
 | `public/index.html` | The whole app: markup, styles and logic             |
 | `public/sync.js`    | Cross-device sync shim (see below)                  |
 | `public/_headers`   | Cache rules, so a deploy is visible straight away   |
+| `public/icon.svg`   | Source art for the home-screen icon                 |
+| `public/manifest.json` | Name, colours and icons for an installed app     |
 | `src/index.js`      | The Worker: serves `/api/state`, backed by KV       |
 | `wrangler.jsonc`    | Worker name, assets directory, KV binding           |
 
