@@ -18,8 +18,33 @@
   var POLL_MS = 8000;
   var docs = {};
 
+  var RELOAD_KEY = "princess-quest-reauth";
+  var reloading = false;
+
+  // Behind Cloudflare Access an expired session answers a fetch with a redirect
+  // to the sign-in page instead of our JSON, which would make every save fail
+  // quietly. Reload so Access can take over the whole page and ask for the
+  // email code. Reload at most once per page and not twice in quick
+  // succession, so a redirect we cannot clear degrades to local saving rather
+  // than a reload loop.
+  function signInExpired() {
+    if (reloading) return;
+    reloading = true;
+    try {
+      var last = Number(sessionStorage.getItem(RELOAD_KEY)) || 0;
+      if (Date.now() - last < 30000) return;
+      sessionStorage.setItem(RELOAD_KEY, String(Date.now()));
+    } catch (e) {}
+    location.reload();
+  }
+
   function request(url, opts) {
     return fetch(url, opts).then(function (res) {
+      var type = res.headers.get("content-type") || "";
+      if (res.redirected || type.indexOf("json") === -1) {
+        signInExpired();
+        throw new Error("sign-in required");
+      }
       if (!res.ok) throw new Error("HTTP " + res.status);
       return res.json();
     });

@@ -61,14 +61,21 @@ Keep that binding in `wrangler.jsonc` and **not** in the dashboard's *Add a
 binding* dialog: `wrangler deploy` treats this file as the source of truth and
 drops any binding that is not in it.
 
-## A note on access
+## Sign-in
 
-`/api/state` has no authentication: anyone who knows the URL can read and
-overwrite the chart. That is usually fine for a family chart, but if you would
-rather lock it down, put **Cloudflare Access** in front of the site (the
-Worker's **Access** tab, which walks you through enabling Zero Trust first).
-It is free at this scale, needs no code changes, and can be set to email-link
-sign-in for just the people you list.
+The site sits behind **Cloudflare Access** with a one-time PIN policy: visitors
+enter an email from the allowed list and get a code. Access guards the whole
+hostname, so `/api/state` is covered along with the page — it has no
+authentication of its own and must not be exposed directly. Keep the
+`workers.dev` routes disabled for that reason.
+
+To change who may sign in: **Zero Trust → Access → Applications →
+princessquest → Policies**.
+
+When an Access session expires, a `fetch` for `/api/state` is answered with a
+redirect to the sign-in page rather than JSON. `sync.js` notices and reloads
+once so Access can take over the page; if that does not clear it, the chart
+keeps working and saves locally rather than reloading in a loop.
 
 ## Published copy
 
