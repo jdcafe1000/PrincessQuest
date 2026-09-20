@@ -67,6 +67,18 @@ Keep that binding in `wrangler.jsonc` and **not** in the dashboard's *Add a
 binding* dialog: `wrangler deploy` treats this file as the source of truth and
 drops any binding that is not in it.
 
+## Finishing a week
+
+When the last star of the week goes up, the chart hands over to a full-screen
+celebration: the princess, a spray of stars that grow in, and the week's
+treasure total.
+
+It fires only on the move into a full week, once per week per device, and a
+dismissed or reloaded page does not replay it. Catching up with a week someone
+else already finished is not a celebration either — the first shared state a
+device receives is taken as its baseline, so opening a chart that is already
+complete stays quiet. Starting a new week re-arms it.
+
 ## Sign-in
 
 The site sits behind **Cloudflare Access** with a one-time PIN policy: visitors
@@ -76,7 +88,8 @@ authentication of its own and must not be exposed directly. Keep the
 `workers.dev` routes disabled for that reason.
 
 To change who may sign in: **Zero Trust → Access → Applications →
-princessquest → Policies**.
+princessquest → Policies**. Each person signs in as themselves and they all
+share one chart, which is what makes it work across two households.
 
 When an Access session expires, a `fetch` for `/api/state` is answered with a
 redirect to the sign-in page rather than JSON. `sync.js` notices and reloads

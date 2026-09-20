@@ -128,6 +128,43 @@ h1 .name{color:var(--copper)}
 .note{margin:12px 2px 0; color:var(--soft); font-weight:700; font-size:.92rem; min-height:1.2em}
 .add{justify-self:start}
 
+/* Week-complete celebration */
+.cheer{
+  position:fixed; inset:0; z-index:50; display:none; place-items:center; overflow:hidden;
+  padding:24px calc(18px + env(safe-area-inset-right,0px)) 24px calc(18px + env(safe-area-inset-left,0px));
+  background:radial-gradient(circle at 50% 38%, var(--sky2) 0%, var(--sky) 70%);
+  text-align:center;
+}
+.cheer[data-open="true"]{display:grid}
+.cheer-inner{position:relative; z-index:2; display:grid; gap:12px; justify-items:center; max-width:540px}
+.cheer .portrait{width:min(52vw,200px); height:auto; filter:drop-shadow(0 12px 26px rgba(67,36,92,.28))}
+.cheer h2{
+  margin:0; font-family:var(--display); font-weight:800; color:var(--plum);
+  font-size:clamp(2rem,9vw,3.1rem); line-height:1.04; letter-spacing:-.01em;
+}
+.cheer p{margin:0; font-weight:800; color:var(--ink); font-size:clamp(1rem,4.2vw,1.2rem)}
+.cheer .prize{color:var(--gold-deep)}
+.cheer .btn{margin-top:6px}
+.cheer-stars{position:absolute; inset:0; z-index:1; pointer-events:none}
+.cheer-stars span{
+  position:absolute; left:var(--x); top:var(--y); width:var(--w); height:var(--w);
+  transform:translate(-50%,-50%) scale(0); opacity:0;
+  animation:cheer-star .9s cubic-bezier(.2,1.5,.4,1) var(--d) forwards,
+            cheer-twinkle 2.6s ease-in-out calc(var(--d) + .9s) infinite;
+}
+.cheer-stars svg{display:block; width:100%; height:100%}
+.cheer .portrait{animation:cheer-pop .7s cubic-bezier(.2,1.4,.4,1) both}
+.cheer h2{animation:cheer-rise .5s ease-out .18s both}
+.cheer p,.cheer .btn{animation:cheer-rise .5s ease-out .32s both}
+@keyframes cheer-pop{from{transform:scale(.35); opacity:0} 65%{transform:scale(1.05)} to{transform:scale(1); opacity:1}}
+@keyframes cheer-rise{from{transform:translateY(14px); opacity:0} to{transform:none; opacity:1}}
+@keyframes cheer-star{
+  from{transform:translate(-50%,-50%) scale(0) rotate(-45deg); opacity:0}
+  55%{opacity:1}
+  to{transform:translate(-50%,-50%) scale(1) rotate(10deg); opacity:1}
+}
+@keyframes cheer-twinkle{0%,100%{opacity:1} 50%{opacity:.5}}
+
 @media (min-width:760px){
   main{padding:28px 24px 56px}
   .portrait{width:170px; height:187px}
@@ -137,11 +174,14 @@ h1 .name{color:var(--copper)}
 }
 @media (prefers-reduced-motion:reduce){
   .day.pop svg{animation:none} .fill,.walker{transition:none}
+  .cheer .portrait,.cheer h2,.cheer p,.cheer .btn{animation:none}
+  .cheer-stars span{animation:none; transform:translate(-50%,-50%) scale(1); opacity:1}
 }
 @media print{
   :root{--sky:#fff;--sky2:#fff;--card:#fff;--ink:#43245C;--soft:#7A5C93;--plum:#5B2E83;--lilac:#CDB4F0;--rose:#F07FAE;--gold:#F2B431;--gold-deep:#C98A0C;--line:#EBD9F5;--empty:#fff;--on-plum:#fff}
   body{background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact}
   .controls,.note,.sum,.remove,.add{display:none !important}
+  .cheer{display:none !important}
   .quest{break-inside:avoid; grid-template-columns:auto minmax(0,1fr) auto auto; grid-template-areas:"icon text extra days"}
   .day{flex:none; width:40px}
   .quests{gap:6px}
@@ -199,6 +239,9 @@ h1 .name{color:var(--copper)}
   <p class="note" id="note" role="status"></p>
 </main>
 
+<div class="cheer" id="cheer" data-open="false" role="dialog" aria-modal="true"
+     aria-label="The whole week is full of stars"></div>
+
 <script src="sync.js"></script>
 <script>
 (function(){
@@ -226,6 +269,8 @@ h1 .name{color:var(--copper)}
   }
 
   var state=defaults(), editing=false, armed=false, db=null, saving=false, dirty=false;
+  var wasDone=null, cheering=false;
+  var CHEER_KEY="princess-quest-cheered-v1";
   var $=function(id){return document.getElementById(id)};
 
   function valid(s){return s&&Array.isArray(s.quests)}
@@ -259,6 +304,62 @@ h1 .name{color:var(--copper)}
     })();
   }
 
+  function closeCheer(){
+    if(!cheering) return;
+    cheering=false;
+    $("cheer").setAttribute("data-open","false");
+    $("cheer").textContent="";
+  }
+
+  // Once per week per device: the other parent's screen cheers too, but only
+  // when their copy actually fills up, and never again on a reload.
+  function maybeCheer(t){
+    var seen=null;
+    try{seen=localStorage.getItem(CHEER_KEY)}catch(e){}
+    if(seen===state.weekOf) return;
+    try{localStorage.setItem(CHEER_KEY,state.weekOf)}catch(e){}
+    cheer(t);
+  }
+
+  function cheer(t){
+    var box=$("cheer");
+    box.textContent="";
+
+    var field=el("div",{class:"cheer-stars","aria-hidden":"true"});
+    for(var i=0;i<22;i++){
+      var sp=el("span",{html:STAR});
+      sp.style.setProperty("--x",(4+Math.random()*92).toFixed(2)+"%");
+      sp.style.setProperty("--y",(4+Math.random()*92).toFixed(2)+"%");
+      sp.style.setProperty("--w",(12+Math.random()*30).toFixed(0)+"px");
+      sp.style.setProperty("--d",(Math.random()*1.2).toFixed(2)+"s");
+      field.appendChild(sp);
+    }
+    box.appendChild(field);
+
+    var inner=el("div",{class:"cheer-inner"});
+    var art=document.querySelector("header .portrait");
+    if(art){
+      var face=art.cloneNode(true);
+      face.removeAttribute("role"); face.removeAttribute("aria-label");
+      face.setAttribute("aria-hidden","true");
+      inner.appendChild(face);
+    }
+    inner.appendChild(el("h2",{text:"Congratulations!"}));
+    var who=(state.name||"").trim();
+    inner.appendChild(el("p",{text:(who?who+", you":"You")+" filled every star this week!"}));
+    if(t.sum>0) inner.appendChild(el("p",{class:"prize",text:"The treasure chest holds "+money(t.sum)+"."}));
+    var btn=el("button",{class:"btn primary",type:"button",text:"Back to the chart",onclick:closeCheer});
+    inner.appendChild(btn);
+    box.appendChild(inner);
+
+    box.setAttribute("data-open","true");
+    cheering=true;
+    try{btn.focus()}catch(e){}
+  }
+
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape") closeCheer() });
+  $("cheer").addEventListener("click",function(e){ if(e.target===e.currentTarget) closeCheer() });
+
   function renderHeader(){
     var h=$("title"), w=$("week"); h.textContent=""; w.textContent="";
     if(editing){
@@ -277,18 +378,28 @@ h1 .name{color:var(--copper)}
     }
   }
 
-  function renderProgress(){
-    var total=state.quests.length*7, got=0, sum=0, priced=false;
+  function totals(){
+    var t={total:state.quests.length*7, got:0, sum:0, priced:false};
     state.quests.forEach(function(x){
       var c=x.days.filter(Boolean).length, v=parseFloat(x.value);
-      got+=c; if(v>0){priced=true; sum+=c*v}
+      t.got+=c; if(v>0){t.priced=true; t.sum+=c*v}
     });
-    var pct=total?got/total*100:0;
+    t.done = t.total>0 && t.got===t.total;
+    return t;
+  }
+
+  function renderProgress(){
+    var t=totals(), pct=t.total?t.got/t.total*100:0;
     $("fill").style.width=pct+"%"; $("walker").style.left=pct+"%";
-    $("count").textContent=total&&got===total?"You made it to the castle!":got+" of "+total+" stars";
-    $("sum").hidden=!priced;
-    $("sumText").textContent="Stars so far add up to "+money(sum);
-    $("useSum").onclick=function(){state.chest=money(sum).slice(1); $("chest").value=state.chest; save()};
+    $("count").textContent=t.done?"You made it to the castle!":t.got+" of "+t.total+" stars";
+    $("sum").hidden=!t.priced;
+    $("sumText").textContent="Stars so far add up to "+money(t.sum);
+    $("useSum").onclick=function(){state.chest=money(t.sum).slice(1); $("chest").value=state.chest; save()};
+
+    // Only on the move into a full week, so a reload or a poll never re-fires.
+    if(wasDone===null) wasDone=t.done;
+    else if(t.done&&!wasDone) maybeCheer(t);
+    wasDone=t.done;
   }
 
   function renderQuests(){
@@ -349,6 +460,8 @@ h1 .name{color:var(--copper)}
     if(!armed){armed=true; e.currentTarget.textContent="Tap again to clear all stars";
       setTimeout(function(){armed=false; $("newWeek").textContent="Start a new week"},4000); return}
     armed=false; e.currentTarget.textContent="Start a new week";
+    closeCheer();
+    try{localStorage.removeItem(CHEER_KEY)}catch(e){}
     state.quests.forEach(function(x){x.days=blank()}); state.chest=""; state.weekOf=monday();
     render(); save(); $("note").textContent="Fresh week, fresh stars.";
   });
@@ -359,12 +472,19 @@ h1 .name{color:var(--copper)}
     if(!(window.claude&&window.claude.use)) return;
     try{
       db=await window.claude.use("db"); if(!db) return;
-      var ref=db.doc("chart/state");
+      var ref=db.doc("chart/state"), firstSnap=true;
       ref.onSnapshot(function(snap){
         if(!snap.exists||snap.metadata.hasPendingWrites||saving) return;
         var a=document.activeElement; if(a&&a.tagName==="INPUT") return;
-        var d=snap.data(); if(!d||typeof d.json!=="string"||d.json===JSON.stringify(state)) return;
-        try{var s=JSON.parse(d.json); if(valid(s)){state=s; try{localStorage.setItem(KEY,d.json)}catch(e){} render()}}catch(e){}
+        var d=snap.data(); if(!d||typeof d.json!=="string") return;
+        if(d.json===JSON.stringify(state)){firstSnap=false; return}
+        try{var s=JSON.parse(d.json); if(valid(s)){
+          state=s; try{localStorage.setItem(KEY,d.json)}catch(e){}
+          // Catching up with a week someone else already finished is not a
+          // moment to celebrate, so take the first shared state as the baseline.
+          if(firstSnap){wasDone=null; firstSnap=false}
+          render();
+        }}catch(e){}
       },function(){});
     }catch(e){db=null}
   })();
