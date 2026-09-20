@@ -67,6 +67,18 @@ Keep that binding in `wrangler.jsonc` and **not** in the dashboard's *Add a
 binding* dialog: `wrangler deploy` treats this file as the source of truth and
 drops any binding that is not in it.
 
+## Editing the quest list
+
+**Edit quests** turns each row into a text field with a rate box, an ✕ to
+remove it and an **Add a quest** button at the end, so the chart can hold as
+few or as many daily tasks as suits the child.
+
+Removing a row that already holds stars asks once before it goes, naming the
+quest and what it would cost, and the prompt lapses after a few seconds. A row
+with no stars goes straight away. The star count is read when the ✕ is
+tapped rather than when the row was drawn, because tapping a day does not
+redraw the row.
+
 ## Weeks and the archive
 
 A week is identified by `weekKey`, the ISO date of its Monday. `weekOf` beside
