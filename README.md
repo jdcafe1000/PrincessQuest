@@ -67,17 +67,28 @@ Keep that binding in `wrangler.jsonc` and **not** in the dashboard's *Add a
 binding* dialog: `wrangler deploy` treats this file as the source of truth and
 drops any binding that is not in it.
 
+## Awarding stars
+
+Tapping a circle sets one day. Dragging across them paints a run of days in one
+go, taking its value from the circle the drag began on, so a drag that starts
+on an empty day fills and one that starts on a star clears.
+
+The `.days` row is `touch-action:pan-y`, so a vertical swipe still scrolls the
+page and only sideways movement reaches the chart. A drag stays inside the row
+it began in, saves once on release rather than once per day, and a drag that
+fills the last of the week still raises the celebration exactly once.
+
 ## Editing the quest list
 
 **Edit quests** turns each row into a text field with a rate box, an ✕ to
 remove it and an **Add a quest** button at the end, so the chart can hold as
 few or as many daily tasks as suits the child.
 
-Removing a row that already holds stars asks once before it goes, naming the
-quest and what it would cost, and the prompt lapses after a few seconds. A row
-with no stars goes straight away. The star count is read when the ✕ is
-tapped rather than when the row was drawn, because tapping a day does not
-redraw the row.
+Removing a row always asks first, naming the quest and, when it holds stars,
+how many would go with it. The star count is read when the ✕ is tapped rather
+than when the row was drawn, because tapping a day does not redraw the row, and
+the quest is found again by id when the removal is confirmed, so a list changed
+by the other household in the meantime cannot make it drop the wrong row.
 
 ## Weeks and the archive
 

@@ -91,8 +91,8 @@ h1 .name{color:var(--copper)}
 .money input:focus{outline:none}
 .money:focus-within{border-color:var(--rose)}
 .remove{width:36px; height:36px; border-radius:50%; border:2px solid var(--line); background:var(--card); font-weight:800; color:var(--soft)}
-.remove.arm{border-color:var(--copper); color:var(--copper); background:color-mix(in srgb,var(--copper) 14%,var(--card))}
-.days{grid-area:days; display:flex; gap:6px; justify-content:space-between}
+.days{grid-area:days; display:flex; gap:6px; justify-content:space-between;
+  touch-action:pan-y; -webkit-user-select:none; user-select:none}
 .day{
   flex:1 1 0; max-width:54px; aspect-ratio:1; min-width:0; border-radius:50%;
   border:2px dashed var(--lilac); background:var(--empty); color:var(--soft);
@@ -128,6 +128,19 @@ h1 .name{color:var(--copper)}
 .btn.small{padding:6px 12px; border-color:var(--gold); color:var(--ink); background:var(--gold)}
 .note{margin:12px 2px 0; color:var(--soft); font-weight:700; font-size:.92rem; min-height:1.2em}
 .add{justify-self:start}
+
+/* Confirmations */
+.ask{position:fixed; inset:0; z-index:60; display:none; place-items:center; padding:22px;
+  background:color-mix(in srgb,var(--ink) 55%,transparent)}
+.ask[data-open="true"]{display:grid}
+.ask-card{
+  background:var(--card); border:2px solid var(--line); border-radius:24px; padding:20px 20px 18px;
+  max-width:390px; display:grid; gap:10px; text-align:center;
+  box-shadow:0 20px 44px color-mix(in srgb,var(--ink) 35%,transparent);
+}
+.ask h2{margin:0; font-family:var(--display); font-weight:800; color:var(--plum); font-size:1.3rem; line-height:1.15}
+.ask p{margin:0; font-weight:700; color:var(--ink); overflow-wrap:anywhere}
+.ask-row{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:4px}
 
 /* Past weeks */
 .history{display:grid; gap:8px; margin-top:14px}
@@ -200,6 +213,7 @@ h1 .name{color:var(--copper)}
   :root{--sky:#fff;--sky2:#fff;--card:#fff;--ink:#43245C;--soft:#7A5C93;--plum:#5B2E83;--lilac:#CDB4F0;--rose:#F07FAE;--gold:#F2B431;--gold-deep:#C98A0C;--line:#EBD9F5;--empty:#fff;--on-plum:#fff}
   body{background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact}
   .controls,.note,.sum,.remove,.add,.history{display:none !important}
+  .ask{display:none !important}
   .cheer{display:none !important}
   .quest{break-inside:avoid; grid-template-columns:auto minmax(0,1fr) auto auto; grid-template-areas:"icon text extra days"}
   .day{flex:none; width:40px}
@@ -262,6 +276,7 @@ h1 .name{color:var(--copper)}
 
 <div class="cheer" id="cheer" data-open="false" role="dialog" aria-modal="true"
      aria-label="The whole week is full of stars"></div>
+<div class="ask" id="ask" data-open="false" role="dialog" aria-modal="true"></div>
 
 <script src="sync.js"></script>
 <script>
@@ -300,7 +315,10 @@ h1 .name{color:var(--copper)}
   }
 
   var state=defaults(), editing=false, armed=false, db=null, saving=false, dirty=false;
-  var wasDone=null, cheering=false, rollReady=false, historyOpen=false, openWeek=null, armedQuest=null;
+  var wasDone=null, cheering=false, rollReady=false, historyOpen=false, openWeek=null;
+  var asking=false, drag=null, suppressClick=false, tipShowing=false;
+  var TIP="Drag across the circles to fill several days at once.";
+  var TIP_KEY="princess-quest-tip-v1";
   var MAX_HISTORY=52;
   var CHEER_KEY="princess-quest-cheered-v1";
   var $=function(id){return document.getElementById(id)};
@@ -392,6 +410,31 @@ h1 .name{color:var(--copper)}
 
   function readyToRoll(){ if(rollReady) return; rollReady=true; checkRollover(); }
 
+  function closeAsk(){
+    if(!asking) return;
+    asking=false;
+    $("ask").setAttribute("data-open","false");
+    $("ask").textContent="";
+  }
+
+  function askConfirm(o){
+    var box=$("ask");
+    box.textContent="";
+    var card=el("div",{class:"ask-card"});
+    card.appendChild(el("h2",{text:o.title}));
+    if(o.body) card.appendChild(el("p",{text:o.body}));
+    var row=el("div",{class:"ask-row"});
+    var no=el("button",{class:"btn",type:"button",text:o.cancel||"Keep it",onclick:closeAsk});
+    row.appendChild(no);
+    row.appendChild(el("button",{class:"btn warn",type:"button",text:o.ok||"Remove",
+      onclick:function(){closeAsk(); o.onOk()}}));
+    card.appendChild(row);
+    box.appendChild(card);
+    box.setAttribute("data-open","true");
+    asking=true;
+    try{no.focus()}catch(e){}
+  }
+
   function closeCheer(){
     if(!cheering) return;
     cheering=false;
@@ -445,8 +488,31 @@ h1 .name{color:var(--copper)}
     try{btn.focus()}catch(e){}
   }
 
-  document.addEventListener("keydown",function(e){ if(e.key==="Escape") closeCheer() });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape"){closeAsk(); closeCheer()} });
   $("cheer").addEventListener("click",function(e){ if(e.target===e.currentTarget) closeCheer() });
+  $("ask").addEventListener("click",function(e){ if(e.target===e.currentTarget) closeAsk() });
+
+  function paintDay(x,di,btn,li,on){
+    if(x.days[di]===on) return false;
+    x.days[di]=on;
+    btn.setAttribute("aria-pressed",String(on));
+    btn.classList.remove("pop");
+    if(on){void btn.offsetWidth; btn.classList.add("pop")}
+    li.classList.toggle("done",x.days.every(Boolean));
+    return true;
+  }
+
+  function showTip(){
+    var seen=null; try{seen=localStorage.getItem(TIP_KEY)}catch(e){}
+    if(seen||editing) return;
+    tipShowing=true; $("note").textContent=TIP;
+  }
+  function clearTip(){
+    try{localStorage.setItem(TIP_KEY,"1")}catch(e){}
+    if(!tipShowing) return;
+    tipShowing=false;
+    if($("note").textContent===TIP) $("note").textContent="";
+  }
 
   function renderHeader(){
     var h=$("title"), w=$("week"); h.textContent=""; w.textContent="";
@@ -485,6 +551,7 @@ h1 .name{color:var(--copper)}
     $("useSum").onclick=function(){state.chest=money(t.sum).slice(1); $("chest").value=state.chest; save()};
 
     // Only on the move into a full week, so a reload or a poll never re-fires.
+    if(drag) return;
     if(wasDone===null) wasDone=t.done;
     else if(t.done&&!wasDone) maybeCheer(t);
     wasDone=t.done;
@@ -507,26 +574,27 @@ h1 .name{color:var(--copper)}
         extra.appendChild(el("label",{class:"money",title:"Dollars per star"},[el("span",{text:"$","aria-hidden":"true"}),
           el("input",{value:x.value,inputmode:"decimal",placeholder:"0","aria-label":"Dollars per star for "+x.text,
             oninput:function(e){x.value=e.target.value.replace(/[^0-9.]/g,""); renderProgress(); save()}})]));
-        var key=x.id||("i"+qi);
-        extra.appendChild(el("button",{class:"remove"+(armedQuest===key?" arm":""),type:"button",text:"✕",
-          "aria-label":(armedQuest===key?"Tap again to remove ":"Remove ")+(x.text||"this quest"),
+        extra.appendChild(el("button",{class:"remove",type:"button",text:"✕",
+          "aria-label":"Remove "+(x.text||"this quest"),
           onclick:function(){
-            // Read the stars now, not at render time: tapping a day does not
-            // redraw the row, so a star earned since then must still count.
-            var stars=x.days.filter(Boolean).length;
-            if(stars>0&&armedQuest!==key){
-              armedQuest=key; renderQuests();
-              $("note").textContent='Tap ✕ again to remove "'+(x.text||"this quest")+'" and its '+
-                stars+(stars===1?" star":" stars")+".";
-              setTimeout(function(){
-                if(armedQuest!==key) return;
-                armedQuest=null; renderQuests(); $("note").textContent="";
-              },4000);
-              return;
-            }
-            armedQuest=null;
-            state.quests.splice(qi,1); renderQuests(); renderProgress(); save();
-            $("note").textContent="";
+            // Count the stars now: tapping a day does not redraw the row, so a
+            // star earned since it was drawn must still be named here.
+            var stars=x.days.filter(Boolean).length, name=x.text||"This quest";
+            askConfirm({
+              title:"Remove this quest?",
+              body:'"'+name+'" comes off the chart'+
+                (stars>0?", along with its "+stars+(stars===1?" star":" stars")+" this week.":"."),
+              ok:"Remove it", cancel:"Keep it",
+              onOk:function(){
+                // Find it again rather than trusting the row's old position:
+                // the other household may have changed the list meanwhile.
+                var idx=-1,i;
+                for(i=0;i<state.quests.length;i++){ if(x.id&&state.quests[i].id===x.id){idx=i; break} }
+                if(idx<0) idx=state.quests.indexOf(x);
+                if(idx<0) return;
+                state.quests.splice(idx,1); renderQuests(); renderProgress(); save();
+              }
+            });
           }}));
       }else if(parseFloat(x.value)>0){
         extra.appendChild(el("span",{class:"worth",text:money(parseFloat(x.value))+" a star"}));
@@ -534,14 +602,20 @@ h1 .name{color:var(--copper)}
       li.appendChild(extra);
       var days=el("div",{class:"days",role:"group","aria-label":x.text});
       DAYS.forEach(function(d,di){
-        days.appendChild(el("button",{class:"day",type:"button","aria-pressed":String(!!x.days[di]),"aria-label":d,html:d+STAR,
-          onclick:function(e){
-            x.days[di]=!x.days[di];
-            var b=e.currentTarget; b.setAttribute("aria-pressed",String(x.days[di]));
-            b.classList.remove("pop"); if(x.days[di]){void b.offsetWidth; b.classList.add("pop")}
-            li.classList.toggle("done",x.days.every(Boolean));
-            renderProgress(); save();
-          }}));
+        var btn=el("button",{class:"day",type:"button","aria-pressed":String(!!x.days[di]),
+          "aria-label":d,"data-di":String(di),html:d+STAR});
+        btn.addEventListener("click",function(){
+          // A drag already wrote these days; do not undo one on the way up.
+          if(suppressClick){suppressClick=false; return}
+          if(paintDay(x,di,btn,li,!x.days[di])){renderProgress(); save(); clearTip()}
+        });
+        btn.addEventListener("pointerdown",function(e){
+          if(e.pointerType==="mouse"&&e.button!==0) return;
+          suppressClick=false;
+          drag={x:x, li:li, host:days, origin:btn, originDi:di, paint:!x.days[di], moved:false, changed:false};
+          try{btn.setPointerCapture(e.pointerId)}catch(err){}
+        });
+        days.appendChild(btn);
       });
       li.appendChild(days);
       li.appendChild(el("div",{class:"ribbon",text:"A perfect week for this quest!"}));
@@ -598,7 +672,7 @@ h1 .name{color:var(--copper)}
 
   $("chest").addEventListener("input",function(e){state.chest=e.target.value.replace(/[^0-9.]/g,""); e.target.value=state.chest; save()});
   $("edit").addEventListener("click",function(){
-    editing=!editing; armedQuest=null; render();
+    editing=!editing; render();
     $("note").textContent=editing?"Add or remove quests, rename them, tap a picture to change it, and set dollars per star if you like.":"";
   });
   $("newWeek").addEventListener("click",function(e){
@@ -611,6 +685,32 @@ h1 .name{color:var(--copper)}
     $("note").textContent="Fresh week, fresh stars. Last week is filed under Past weeks.";
   });
 
+  // Pointer capture routes every move to the circle the drag began on, so the
+  // day under the finger is found by hit testing instead.
+  document.addEventListener("pointermove",function(e){
+    if(!drag) return;
+    var node=document.elementFromPoint(e.clientX,e.clientY);
+    var target=node&&node.closest?node.closest(".day"):null;
+    if(!target||target.parentNode!==drag.host) return;
+    if(!drag.moved){
+      if(target===drag.origin) return;
+      drag.moved=true;
+      if(paintDay(drag.x,drag.originDi,drag.origin,drag.li,drag.paint)) drag.changed=true;
+    }
+    if(paintDay(drag.x,Number(target.getAttribute("data-di")),target,drag.li,drag.paint)) drag.changed=true;
+    renderProgress();
+  });
+
+  function endDrag(){
+    if(!drag) return;
+    var moved=drag.moved, changed=drag.changed;
+    drag=null;
+    suppressClick=moved;
+    if(changed){renderProgress(); save(); clearTip()}
+  }
+  document.addEventListener("pointerup",endDrag);
+  document.addEventListener("pointercancel",endDrag);
+
   $("past").addEventListener("click",function(){historyOpen=!historyOpen; renderHistory()});
 
   document.addEventListener("visibilitychange",function(){ if(!document.hidden) checkRollover() });
@@ -618,6 +718,7 @@ h1 .name{color:var(--copper)}
   setInterval(checkRollover,10*60*1000);
 
   render();
+  showTip();
 
   (async function(){
     setTimeout(readyToRoll,3000);
