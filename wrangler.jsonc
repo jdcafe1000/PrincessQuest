@@ -12,25 +12,13 @@
     "binding": "ASSETS"
   },
 
-  "observability": { "enabled": true }
+  "observability": { "enabled": true },
 
-  // ---------------------------------------------------------------------
-  // TURN ON CROSS-DEVICE SYNC
-  //
-  // Until this is here, the chart works but each device saves on its own.
-  //
-  //   1. Dashboard -> Storage & Databases -> KV -> Create a namespace,
-  //      named princess-quest. Copy the namespace ID it shows you.
-  //   2. Add a comma after the "observability" line above, then uncomment
-  //      the block below and paste the ID in place of PASTE_NAMESPACE_ID.
-  //   3. Commit and push. The build deploys it.
-  //
-  // Add the binding HERE, not in the dashboard's "Add a binding" dialog:
-  // this Worker deploys with `wrangler deploy`, which treats this file as the
-  // source of truth and drops any binding that is not in it.
-  //
-  // "kv_namespaces": [
-  //   { "binding": "CHART", "id": "PASTE_NAMESPACE_ID" }
-  // ]
-  // ---------------------------------------------------------------------
+  // The shared chart lives here. Keep this binding in this file rather than in
+  // the dashboard's "Add a binding" dialog: this Worker deploys with
+  // `wrangler deploy`, which treats this file as the source of truth and drops
+  // any binding that is not in it.
+  "kv_namespaces": [
+    { "binding": "CHART", "id": "a3f18f57cece45948dc2ff7802a74ee9" }
+  ]
 }

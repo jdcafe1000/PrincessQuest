@@ -39,9 +39,9 @@ The page asks its host for a shared document store via
   by `/api/state`, which keeps the chart in a Cloudflare KV namespace.
 
 So one copy of `index.html` works in both places, unchanged. If neither is
-available — opening the file from disk, or before the KV namespace is bound —
-`use("db")` resolves `null`, and the chart quietly saves to local storage on
-that device only.
+available — opening the file straight from disk, or if the namespace is ever
+unreachable — `use("db")` resolves `null`, and the chart quietly saves to local
+storage on that device only.
 
 KV has no push channel, so the page polls every 8 seconds while it is in the
 foreground, and re-reads immediately whenever it is brought back to the front.
@@ -54,17 +54,12 @@ The Worker builds from this repo on every push to `main`. Build command is
 empty; the deploy command is `npx wrangler deploy`, which reads
 `wrangler.jsonc`.
 
-**Turning on cross-device sync** takes one edit:
+Cross-device sync is backed by the `princess-quest` KV namespace, bound as
+`CHART` in `wrangler.jsonc`.
 
-1. Dashboard → **Storage & Databases** → **KV** → *Create a namespace*, named
-   `princess-quest`. Copy the namespace ID.
-2. In `wrangler.jsonc`, uncomment the `kv_namespaces` block at the bottom and
-   paste the ID (the file has the exact steps inline).
-3. Commit and push.
-
-Add the binding in `wrangler.jsonc`, **not** in the dashboard's *Add a binding*
-dialog: `wrangler deploy` treats this file as the source of truth and drops any
-binding that is not in it.
+Keep that binding in `wrangler.jsonc` and **not** in the dashboard's *Add a
+binding* dialog: `wrangler deploy` treats this file as the source of truth and
+drops any binding that is not in it.
 
 ## A note on access
 
